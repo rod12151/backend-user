@@ -1,4 +1,4 @@
-package com.rodmel.backenduserApp.models.intities;
+package com.rodmel.backenduserApp.models.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
