@@ -13,6 +13,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -42,9 +45,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
-            throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
+        String username = ((org.springframework.security.core.userdetails.User) authResult.getPrincipal()).getUsername();
 
+        String originalInput="algun_token_con_algun_frase_secreta"+ username;
+
+        String token = Base64.getEncoder().encodeToString(originalInput.getBytes());
+        response.addHeader("Authorization","Bearer"+token);
+        Map<String,Object> body = new HashMap<>();
+        body.put("token",token);
+        body.put("message",String.format("Hola %s, Has iniciado sesion con exito",username));
+        body.put("username",username);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
+        response.setStatus(200);
+        response.setContentType("application/json");
     }
 
     @Override
