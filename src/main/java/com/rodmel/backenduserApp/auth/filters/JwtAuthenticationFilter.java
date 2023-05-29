@@ -49,7 +49,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authResult) throws IOException, ServletException {
         String username = ((org.springframework.security.core.userdetails.User) authResult.getPrincipal()).getUsername();
 
-        String originalInput=SECRET_KEY+ username;
+        String originalInput=SECRET_KEY+":"+ username;
+
 
         String token = Base64.getEncoder().encodeToString(originalInput.getBytes());
         response.addHeader(HEADER_AUTHORIZATION,PREFIX_TOKEN+token);

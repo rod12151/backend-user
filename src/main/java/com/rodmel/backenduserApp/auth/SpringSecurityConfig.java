@@ -1,6 +1,7 @@
 package com.rodmel.backenduserApp.auth;
 
 import com.rodmel.backenduserApp.auth.filters.JwtAuthenticationFilter;
+import com.rodmel.backenduserApp.auth.filters.JwtValidationFilter;
 import lombok.AllArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -37,7 +38,7 @@ public class SpringSecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
-                .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
+                .addFilter(new JwtValidationFilter(authenticationConfiguration.getAuthenticationManager()))
                 .csrf()
                 .disable()
                 .sessionManagement()
