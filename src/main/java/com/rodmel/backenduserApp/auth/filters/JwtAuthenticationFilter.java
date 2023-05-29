@@ -11,7 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import static  com.rodmel.backenduserApp.auth.TokenJwtConfig.*;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
@@ -34,8 +34,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             username = user.getUsername();
             password = user.getPassword();
 
-            logger.info("Username desde request InputStream (raw) "+ username);
-            logger.info("Password desde request InputStream (raw) "+ password);
+            /*logger.info("Username desde request InputStream (raw) "+ username);
+            logger.info("Password desde request InputStream (raw) "+ password);*/
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,10 +49,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authResult) throws IOException, ServletException {
         String username = ((org.springframework.security.core.userdetails.User) authResult.getPrincipal()).getUsername();
 
-        String originalInput="algun_token_con_algun_frase_secreta"+ username;
+        String originalInput=SECRET_KEY+ username;
 
         String token = Base64.getEncoder().encodeToString(originalInput.getBytes());
-        response.addHeader("Authorization","Bearer"+token);
+        response.addHeader(HEADER_AUTHORIZATION,PREFIX_TOKEN+token);
         Map<String,Object> body = new HashMap<>();
         body.put("token",token);
         body.put("message",String.format("Hola %s, Has iniciado sesion con exito",username));
