@@ -3,6 +3,7 @@ package com.rodmel.backenduserApp.services;
 import com.rodmel.backenduserApp.models.entities.User;
 import com.rodmel.backenduserApp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
     @Override
     @Transactional(readOnly = true)
     public List<User> findAll() {
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public User save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
